@@ -36,7 +36,7 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=url&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap()
+            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap() ?: emptyMap()
             (obj["url"] as? String) ?: ""
         } catch (e: Exception) { "" }
     }
@@ -45,7 +45,7 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=lyric&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap()
+            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap() ?: emptyMap()
             (obj["lrc"] as? Map<*,*>)?.get("lyric") as? String ?: ""
         } catch (e: Exception) { "" }
     }
