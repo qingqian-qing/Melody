@@ -1,7 +1,6 @@
 package com.example.musicplayer.network
 
 import com.google.gson.Gson
-import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -37,8 +36,8 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=url&id=$songId"
             val json = fetch(url)
-            val obj = JsonParser.parseString(json).asJsonObject
-            obj.get("url")?.asString ?: ""
+            val obj = gson.fromJson(json, Map::class.java)
+            (obj["url"] as? String) ?: ""
         } catch (e: Exception) { "" }
     }
 
@@ -46,8 +45,8 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=lyric&id=$songId"
             val json = fetch(url)
-            val obj = JsonParser.parseString(json).asJsonObject
-            obj.getAsJsonObject("lrc")?.get("lyric")?.asString ?: ""
+            val obj = gson.fromJson(json, Map::class.java)
+            (obj["lrc"] as? Map<*,*>)?.get("lyric") as? String ?: ""
         } catch (e: Exception) { "" }
     }
 
@@ -57,16 +56,15 @@ object MusicApi {
     }
 
     private fun parseSongs(json: String): List<Song> {
-        val arr = JsonParser.parseString(json).asJsonArray
-        return arr.map {
+        val arr = gson.fromJson(json, List::class.java)
+        return arr.mapNotNull { item ->
+            val map = item as? Map<*,*> ?: return@mapNotNull null
             Song(
-                id = it.asJsonObject.get("id")?.asLong ?: 0,
-                name = it.asJsonObject.get("name")?.asString ?: "",
-                artist = it.asJsonObject.get("artist")?.asString ?: "",
-                album = it.asJsonObject.get("album")?.asString ?: "",
-                picUrl = it.asJsonObject.get("pic_id")?.let { pid ->
-                    "https://p1.music.126.net/$pid.jpg"
-                } ?: ""
+                id = (map["id"] as? Number)?.toLong() ?: 0,
+                name = (map["name"] as? String) ?: "",
+                artist = (map["artist"] as? String) ?: "",
+                album = (map["album"] as? String) ?: "",
+                picUrl = (map["pic_id"] as? String)?.let { "https://p1.music.126.net/$it.jpg" } ?: ""
             )
         }
     }
