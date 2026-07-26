@@ -36,8 +36,8 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=url&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, MutableMap::class.java) as? MutableMap<String,Any>
-            (obj?.get("url") as? String) ?: ""
+            val obj = gson.fromJson(json, Map::class.java)
+            (obj["url"] as? String) ?: ""
         } catch (e: Exception) { "" }
     }
 
@@ -45,9 +45,8 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=lyric&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, MutableMap::class.java) as? MutableMap<String,Any>
-            val lrc = obj?.get("lrc") as? Map<*,*>
-            (lrc?.get("lyric") as? String) ?: ""
+            val obj = gson.fromJson(json, Map::class.java)
+            (obj["lrc"] as? Map<*,*>)?.get("lyric") as? String ?: ""
         } catch (e: Exception) { "" }
     }
 
@@ -57,19 +56,16 @@ object MusicApi {
     }
 
     private fun parseSongs(json: String): List<Song> {
-        try {
-            val arr = gson.fromJson(json, Array<MutableMap<String,Any>>::class.java)
-            return arr?.mapNotNull { map ->
-                Song(
-                    id = (map["id"] as? Number)?.toLong() ?: 0,
-                    name = (map["name"] as? String) ?: (map["title"] as? String) ?: "",
-                    artist = (map["artist"] as? String) ?: (map["author"] as? String) ?: "",
-                    album = (map["album"] as? String) ?: "",
-                    picUrl = (map["pic_id"] as? String)?.let { "https://p1.music.126.net/$it.jpg" }
-                        ?: (map["pic"] as? String) ?: ""
-                )
-            } ?: emptyList()
-        } catch(e: Exception) {
-            emptyList()
+        val arr = gson.fromJson(json, List::class.java)
+        return arr.mapNotNull { item ->
+            val map = item as? Map<*,*> ?: return@mapNotNull null
+            Song(
+                id = (map["id"] as? Number)?.toLong() ?: 0,
+                name = (map["name"] as? String) ?: "",
+                artist = (map["artist"] as? String) ?: "",
+                album = (map["album"] as? String) ?: "",
+                picUrl = (map["pic_id"] as? String)?.let { "https://p1.music.126.net/$it.jpg" } ?: ""
+            )
         }
     }
+}
