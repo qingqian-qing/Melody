@@ -107,7 +107,7 @@ fun PlayerScreen(player: MusicPlayer, onSettings: () -> Unit) {
                 IconButton(onClick = onSettings) {
                     Icon(Icons.Default.Settings, "设置", tint = Color.White)
                 }
-                Text("Melody", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("純粋の浅", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 IconButton(onClick = { showSearch = true }) {
                     Icon(Icons.Default.Search, "搜索", tint = Color.White)
                 }
