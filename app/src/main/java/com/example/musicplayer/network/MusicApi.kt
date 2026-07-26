@@ -9,7 +9,7 @@ import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
 object MusicApi {
-    private const val BASE = "http://musicapi.chuyel.top/meting/api"
+    private const val BASE = "https://musicapi.chuyel.top/meting/api"
     private val client = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
@@ -36,7 +36,7 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=url&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, Map::class.java)
+            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap()
             (obj["url"] as? String) ?: ""
         } catch (e: Exception) { "" }
     }
@@ -45,7 +45,7 @@ object MusicApi {
         try {
             val url = "$BASE?server=netease&type=lyric&id=$songId"
             val json = fetch(url)
-            val obj = gson.fromJson(json, Map::class.java)
+            val obj = gson.fromJson(json, Map::class.java) ?: emptyMap()
             (obj["lrc"] as? Map<*,*>)?.get("lyric") as? String ?: ""
         } catch (e: Exception) { "" }
     }
@@ -56,13 +56,13 @@ object MusicApi {
     }
 
     private fun parseSongs(json: String): List<Song> {
-        val arr = gson.fromJson(json, List::class.java)
-        return arr.mapNotNull { item ->
-            val map = item as? Map<*,*> ?: return@mapNotNull null
+        val arr = gson.fromJson(json, Array<Map<String,Any>>::class.java)
+        return arr?.mapNotNull { item ->
+            
             Song(
                 id = (map["id"] as? Number)?.toLong() ?: 0,
-                name = (map["name"] as? String) ?: "",
-                artist = (map["artist"] as? String) ?: "",
+                name = (map["name"] as? String) ?: (map["title"] as? String) ?: "",
+                artist = (map["artist"] as? String) ?: (map["author"] as? String) ?: "",
                 album = (map["album"] as? String) ?: "",
                 picUrl = (map["pic_id"] as? String)?.let { "https://p1.music.126.net/$it.jpg" } ?: ""
             )
