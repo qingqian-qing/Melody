@@ -53,7 +53,7 @@ fun PlayerScreen(player: MusicPlayer, onSettings: () -> Unit) {
     var showSearch by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     var searchResults by remember { mutableStateOf<List<Song>>(emptyList()) }
-    var bgUri by remember { mutableStateOf<Uri?>() }
+    var bgUri by remember { mutableStateOf<Uri?>(null) }
     var wallpapers by remember { mutableStateOf(listOf<Uri>()) }
 
     val scaleAnim = remember { Animatable(1f) }

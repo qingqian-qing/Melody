@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class MusicPlayer(context: Context) {
     val exoPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
-    private val _currentSong = MutableStateFlow<Song?>()
+    private val _currentSong = MutableStateFlow<Song?>(null)
     val currentSong: StateFlow<Song?> = _currentSong
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying: StateFlow<Boolean> = _isPlaying

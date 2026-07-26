@@ -26,7 +26,7 @@ import coil.compose.AsyncImage
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
     var wallpapers by remember { mutableStateOf(listOf<Uri>()) }
-    var selectedBg by remember { mutableStateOf<Uri?>() }
+    var selectedBg by remember { mutableStateOf<Uri?>(null) }
 
     val imgPicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { wallpapers = wallpapers + it }
