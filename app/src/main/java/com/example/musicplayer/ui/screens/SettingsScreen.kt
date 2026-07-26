@@ -78,7 +78,7 @@ fun SettingsScreen(onBack: () -> Unit) {
             Text("关于", color = Color.White,
                 fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(12.dp))
-            Text("Melody - 简洁优雅的音乐播放器", color = Color.White.copy(0.6f))
+            Text("純粋の浅 - 网易云音乐播放器", color = Color.White.copy(0.6f))
             Text("支持网易云歌单导入", color = Color.White.copy(0.6f))
             Text("自定义壁纸 | 毛玻璃效果 | QQ弹弹动画",
                 color = Color.White.copy(0.6f))
